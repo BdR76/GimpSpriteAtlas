@@ -33,6 +33,8 @@ So first open all your images as layers. You can do this from the menu `Open As 
 Alternatively, you can first open one image (preferably the largest one),
 and then drag and drop all the remaining images onto the layers window.
 
+Note: opening images as layers can be remarkably slow (see [issue report](https://gitlab.gnome.org/GNOME/gimp/-/issues/8200)).
+
 ![GIMP Sprite Atlas plug-in how to use 1](/gimp_screenshot1.png?raw=true "GIMP Sprite Atlas plug-in how to use 1")
 
 Then go to the menu `Filters > Animation > Sprite Atlas` to open the GIMP SpriteAtlas plug-in, you'll see the following dialog.
@@ -91,11 +93,10 @@ The tile size will be the width and height of the original image.
 It is based on a [plug-in by Spydarlee](https://github.com/Spydarlee/scripts/tree/master/GIMP)
 but with some bugfixes and additional options
 
-![GIMP Sprite Sheet](/spriteatlas_spritesheet.png?raw=true "GIMP Sprite Sheet")
-
 Trouble shooting / Known issues
 -------------------------------
-* Once you've created a sprite texture, it's best to also save the original image with the layers as a `.xcf`.
+* Opening images as layers is remarkably slow in GIMP (see [issue report](https://gitlab.gnome.org/GNOME/gimp/-/issues/8200)).
+Once you've created a sprite texture, it's best to also save the original image with the layers as a `.xcf`.
 If you want to make changes to the texture at a later time (add/remove sprites)
 then you can more quickly open the `.xcf` instead of having to re-add all the images as layers again.
 
