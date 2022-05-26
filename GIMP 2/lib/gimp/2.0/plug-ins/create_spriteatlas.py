@@ -90,11 +90,6 @@ def prepare_layers_metadata(layers):
 
     # also initialise list of spaces, start with a single empty space based on average layer size
     spaces.append(spaceobj(0, 0, startWidth, (startWidth+startWidth)))
-    
-    #gimp.message("prepare_layers_metadata, len(spaces)=%d" % (len(spaces)))
-
-    #test123 = "length new array = " + str(len(layer_rects))
-    #gimp.message(test123)
     return
 
 def calc_layers_packing():
@@ -185,7 +180,7 @@ def extrude_edges(img, lyr, x, y, w, h):
     # Move the floating layer into the correct position
     pdb.gimp_layer_translate(floatselection, xOffset, yOffset)
 
-def render_spriteatlas(layers, filename):
+def render_spriteatlas(layers, filename, filetag):
     # render output atlas based on current layer coordinates
     
     # determine total width, height
@@ -201,7 +196,7 @@ def render_spriteatlas(layers, filename):
 
     # create new image
     imgAtlas = gimp.Image(img_w, img_h, RGB)
-    newLayer = gimp.Layer(imgAtlas, "Spritesheet", img_w, img_h, RGBA_IMAGE, 100, NORMAL_MODE)
+    newLayer = gimp.Layer(imgAtlas, filetag, img_w, img_h, RGBA_IMAGE, 100, NORMAL_MODE)
     imgAtlas.add_layer(newLayer, 1)
     
     # copy all layers to new positions
@@ -221,7 +216,7 @@ def render_spriteatlas(layers, filename):
         # Anchor the floating selection before making another selection
         pdb.gimp_floating_sel_anchor(floatingLayer)
 
-        # extrude up, down, left, right        
+        # extrude up, down, left, right
         if obj.ext_up == 1: # up
             extrude_edges_2(imgAtlas, newLayer, obj.pack_x, obj.pack_y, obj.width, 1, obj.pack_x, obj.pack_y-1)
         if obj.ext_down == 1: # down
@@ -237,7 +232,7 @@ def render_spriteatlas(layers, filename):
         
     # Merge the last floating layer into our final 'Spritesheet' layer
     pdb.gimp_image_merge_visible_layers(imgAtlas, 0)
-    
+
     # look through spaces backwards so that we check smaller spaces first
     horzmark = True
     xmark = img_w
@@ -276,22 +271,27 @@ def render_spriteatlas(layers, filename):
     # Create and show a new image window for our spritesheet
     gimp.Display(imgAtlas)
     gimp.displays_flush()
-    return
+    return img_w, img_h
 
-def write_spriteatlas_jsonarray(filename):
-    stroutput = "{\n\t\"frames\":[\n"
+def write_spriteatlas_jsonarray(filename, filetag, sizex, sizey):
+    stroutput = "{\n\t\"frames\":["
     
     # insert all sprite metadata
     for obj in layer_rects:
-        stroutput += '\t\t{"filename":"%s","frame":{"x":%d,"y":%d,"w":%d,"h":%d},"rotated":"false","trimmed":"false",' % (obj.name, obj.pack_x, obj.pack_y, obj.width, obj.height)
+        stroutput += '\n\t\t{"filename":"%s","frame":{"x":%d,"y":%d,"w":%d,"h":%d},"rotated":"false","trimmed":"false",' % (obj.name, obj.pack_x, obj.pack_y, obj.width, obj.height)
         stroutput += '"spriteSourceSize":{"x":0,"y":0,"w":%d,"h":%d},' % (obj.width, obj.height)
-        stroutput += '"sourceSize":{"w":%d,"h":%d}},\n' % (obj.width, obj.height)
-    stroutput += "\t]\n"
+        stroutput += '"sourceSize":{"w":%d,"h":%d}},' % (obj.width, obj.height)
+
+    # remove last comma
+    stroutput = stroutput[:-1]
+
+    # meta data
+    stroutput += "\n\t]\n"
     stroutput += "\t\"meta\":{\n"
     stroutput += "\t\t\"app\":\"https://github.com/BdR76/GimpSpriteAtlas/\",\n"
     stroutput += "\t\t\"version\":\"GIMP SpriteAtlas plug-in %s\",\n" % ATLAS_PLUGIN_VERSION
-    stroutput += "\t\t\"image\":\"sprites.png\",\n"
-    stroutput += "\t\t\"size\":{\"w\":123,\"h\":456},\n"
+    stroutput += ("\t\t\"image\":\"%s.png\",\n" % filetag)
+    stroutput += ("\t\t\"size\":{\"w\":%d,\"h\":%d},\n" % (sizex, sizey))
     stroutput += "\t\t\"scale\":1\n"
     stroutput += "\t}\n"
     stroutput += "]"
@@ -305,20 +305,25 @@ def write_spriteatlas_jsonarray(filename):
     outputfile.close()
     return
     
-def write_spriteatlas_jsonhash(filename):
-    stroutput = "{\n\t\"frames\":{\n"
+def write_spriteatlas_jsonhash(filename, filetag, img_w, img_h):
+    stroutput = "{\n\t\"frames\":{"
     
     # insert all sprite metadata
     for obj in layer_rects:
-        stroutput += '\t\t"%s":{"frame":{"x":%d,"y":%d,"w":%d,"h":%d},"rotated":"false","trimmed":"false",' % (obj.name, obj.pack_x, obj.pack_y, obj.width, obj.height)
+        stroutput += '\n\t\t"%s":{"frame":{"x":%d,"y":%d,"w":%d,"h":%d},"rotated":"false","trimmed":"false",' % (obj.name, obj.pack_x, obj.pack_y, obj.width, obj.height)
         stroutput += '"spriteSourceSize":{"x":0,"y":0,"w":%d,"h":%d},' % (obj.width, obj.height)
-        stroutput += '"sourceSize":{"w":%d,"h":%d}},\n' % (obj.width, obj.height)
-    stroutput += "\t}\n"
+        stroutput += '"sourceSize":{"w":%d,"h":%d}},' % (obj.width, obj.height)
+
+    # remove last comma
+    stroutput = stroutput[:-1]
+
+    # meta data
+    stroutput += "\n\t}\n"
     stroutput += "\t\"meta\":{\n"
     stroutput += "\t\t\"app\":\"https://github.com/BdR76/GimpSpriteAtlas/\",\n"
     stroutput += "\t\t\"version\":\"GIMP SpriteAtlas plug-in %s\",\n" % ATLAS_PLUGIN_VERSION
-    stroutput += "\t\t\"image\":\"sprites.png\",\n"
-    stroutput += "\t\t\"size\":{\"w\":123,\"h\":456},\n"
+    stroutput += ("\t\t\"image\":\"%s.png\",\n" % filetag)
+    stroutput += ("\t\t\"size\":{\"w\":%d,\"h\":%d},\n" % (img_w, img_h))
     stroutput += "\t\t\"scale\":1\n"
     stroutput += "\t}\n"
     stroutput += "]"
@@ -332,14 +337,14 @@ def write_spriteatlas_jsonhash(filename):
     outputfile.close()
     return
     
-def write_spriteatlas_css(filename):
+def write_spriteatlas_css(filename, filetag):
     
     stroutput = "/* GIMP SpriteAtlas plug-in %s by BdR 2022 */\n" % ATLAS_PLUGIN_VERSION
 
     # insert all sprite metadata
     for obj in layer_rects:
         stroutput += ".%s {\n" % obj.name
-        stroutput += "\tbackground: url('spritesheet.png') no-repeat -%dpx -%dpx;\n" % (obj.pack_x, obj.pack_y)
+        stroutput += "\tbackground: url('%s.png') no-repeat -%dpx -%dpx;\n" % (filetag, obj.pack_x, obj.pack_y)
         stroutput += "\twidth: %dpx;\n" % obj.width
         stroutput += "\theight: %dpx;\n" % obj.height
         stroutput += "}\n"
@@ -354,9 +359,9 @@ def write_spriteatlas_css(filename):
     return
     
 
-def write_spriteatlas_xml(filename):
+def write_spriteatlas_xml(filename, filetag):
     
-    stroutput = '<textureatlas xmlns="http://www.w3.org/1999/xhtml" imagepath="spritesheet.png">\n'
+    stroutput = ('<textureatlas xmlns="http://www.w3.org/1999/xhtml" imagepath="%s.png">\n' % filetag)
     stroutput += '\t<!-- GIMP SpriteAtlas plug-in %s by BdR 2022 -->\n' % ATLAS_PLUGIN_VERSION
 
     # insert all sprite metadata
@@ -393,23 +398,23 @@ def create_spriteatlas(image, filetag, foldername, outputtype, padding):
 
     # compile image
     calc_layers_packing()
-    render_spriteatlas(layers, outputname)
+    img_w, img_h = render_spriteatlas(layers, outputname, filetag)
 
     # write to output file
     if outputtype == 1:
-        write_spriteatlas_jsonarray(outputname)
+        write_spriteatlas_jsonarray(outputname, filetag, img_w, img_h)
     elif outputtype == 2:
-        write_spriteatlas_jsonhash(outputname)
+        write_spriteatlas_jsonhash(outputname, filetag, img_w, img_h)
     elif outputtype == 3:
-        write_spriteatlas_css(outputname)
+        write_spriteatlas_css(outputname, filetag)
     else: # outputtype == 4
-        write_spriteatlas_xml(outputname)
+        write_spriteatlas_xml(outputname, filetag)
     
 # Register the plugin with Gimp so it appears in the filters menu
 register(
     "python_fu_create_spriteatlas",
-    "Create a new spriteatlas imge from the layers of the current image 123.",
-    "Create a new spriteatlas imge from the layers of the current image 456.",
+    "Create a new spriteatlas imge from the layers of the current image.",
+    "Create a new spriteatlas imge from the layers of the current image.",
     "Bas de Reuver",
     "Bas de Reuver",
     "2022",
