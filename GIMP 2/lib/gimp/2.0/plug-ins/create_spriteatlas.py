@@ -413,8 +413,8 @@ def create_spriteatlas(image, filetag, foldername, outputtype, padding):
 # Register the plugin with Gimp so it appears in the filters menu
 register(
     "python_fu_create_spriteatlas",
-    "Create a new spriteatlas imge from the layers of the current image.",
-    "Create a new spriteatlas imge from the layers of the current image.",
+    "Create a sprite texture image from the layers of the current image.",
+    "Create a sprite texture image from the layers of the current image.",
     "Bas de Reuver",
     "Bas de Reuver",
     "2022",
