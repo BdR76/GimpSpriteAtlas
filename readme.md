@@ -9,7 +9,7 @@ It uses a packing algorithm to use as litte space as possible in the final
 texture. And it exports a JSON, XML or CSS file with the sprite names and
 their coordinates within the compiled texture.
 
-![GIMP Sprite Atlas plug-in summary](/spriteatlas_summary.png?raw=true "GIMP Sprite Atlas plug-in summary")
+![GIMP Sprite Atlas plug-in summary](/docs/spriteatlas_summary.png?raw=true "GIMP Sprite Atlas plug-in summary")
 
 How to install
 -------------
@@ -47,12 +47,12 @@ then drag and drop all the remaining images onto the layers window.
 Note: opening images as layers can be remarkably slow
 (see [issue report](https://gitlab.gnome.org/GNOME/gimp/-/issues/8200)).
 
-![GIMP Sprite Atlas plug-in how to use 1](/gimp_screenshot1.png?raw=true "GIMP Sprite Atlas plug-in how to use 1")
+![GIMP Sprite Atlas plug-in how to use 1](/docs/gimp_screenshot1.png?raw=true "GIMP Sprite Atlas plug-in how to use 1")
 
 Then go to the menu `Filters > Animation > Sprite Atlas` to open the GIMP
 SpriteAtlas plug-in, you'll see the following dialog.
 
-![GIMP Sprite Atlas plug-in how to use 1](/gimp_screenshot2.png?raw=true "GIMP Sprite Atlas plug-in how to use 2")
+![GIMP Sprite Atlas plug-in how to use 1](/docs/gimp_screenshot2.png?raw=true "GIMP Sprite Atlas plug-in how to use 2")
 
 Make sure to select an export folder, this is where the output image and
 coordinates datafile will be exported to. The default export folder is
@@ -64,7 +64,7 @@ the following error message:
 Press OK to generate the spriteatlas and export the sprite texture and sprite
 metadata file.
 
-![GIMP Sprite Atlas plug-in how to use 1](/gimp_screenshot3.png?raw=true "GIMP Sprite Atlas plug-in how to use 3")
+![GIMP Sprite Atlas plug-in how to use 1](/docs/gimp_screenshot3.png?raw=true "GIMP Sprite Atlas plug-in how to use 3")
 
 Options
 -------
@@ -105,7 +105,7 @@ In the compiled texture, the plug-in will extend this sprite by one pixel down
 and one pixel right, meaning it will copy the bottom row pixels and the
 right-most column of pixels of that sprite.
 
-![GIMP Sprite Atlas plug-in extend edges](/spriteatlas_extend.png?raw=true "GIMP Sprite Atlas plug-in extend edges")
+![GIMP Sprite Atlas plug-in extend edges](/docs/spriteatlas_extend.png?raw=true "GIMP Sprite Atlas plug-in extend edges")
 
 Sprite Sheet
 ------------
