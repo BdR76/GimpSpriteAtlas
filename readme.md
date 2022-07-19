@@ -5,7 +5,7 @@ GIMP SpriteAtlas is a plug-in to compile
 sprite textures for use in games and websites.
 
 The plug-in takes several smaller images and compiles them into a single image.
-It uses a packing algorithm to use as litte space as possible in the final
+It uses a packing algorithm to use as little space as possible in the final
 texture. And it exports a JSON, XML or CSS file with the sprite names and
 their coordinates within the compiled texture.
 
@@ -95,7 +95,7 @@ texture tiles can "overflow" and pick up parts of neighboring tiles.
 
 **Extending sprites** the plug-in can automatically extend the edges on some
 sprites Up Down Left and/or Right. This can be useful to make tiles in a
-tilemap align seemless, so without any lines between tiles. For example if
+tilemap align seemlessly, so without any lines between tiles. For example if
 you want to extend a sprite **D**own and **R**right you can add `[ext=DR]` to
 the name like this
 
