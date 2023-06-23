@@ -14,7 +14,7 @@ their coordinates within the compiled texture.
 How to install
 -------------
 First install [GIMP](https://www.gimp.org/), then place the Python script file
-[create_spriteatlas.py](/tree/master/lib/gimp/2.0/plug-ins/) in the GIMP folder,
+[create_spriteatlas.py](/GIMP%202/lib/gimp/2.0/plug-ins) in the GIMP folder,
 typically under program files:
 
 	Windows (all users)
