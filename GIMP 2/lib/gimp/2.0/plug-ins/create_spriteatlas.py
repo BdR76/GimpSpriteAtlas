@@ -12,7 +12,7 @@ import os
 layer_rects = []
 spaces = []
 pixel_space = 1
-ATLAS_PLUGIN_VERSION = "v0.1"
+ATLAS_PLUGIN_VERSION = "v0.2"
 
 # empty space
 class spaceobj(object):
@@ -250,7 +250,7 @@ def render_spriteatlas(layers, filename, filetag):
 
     # add small watermark
     drwLayer = pdb.gimp_image_active_drawable(imgAtlas)
-    pixelwm = [7, 5, 6, 0, 7, 0, 7, 49, 66, 49, 7, 112, 87, 115, 0, 64, 4, 23, 113, 0, 7, 3, 112, 119, 97, 0, 103, 112, 1, 119, 49, 96, 7, 7, 21, 112, 70, 3, 118, 81, 119, 1, 16, 119, 68, 16, 118, 67, 6, 0, 4, 7, 1]
+    pixelwm = [7, 5, 6, 0, 7, 0, 55, 65, 50, 1, 119, 80, 119, 3, 64, 0, 20, 119, 65, 0, 7, 3, 112, 119, 97, 0, 103, 112, 1, 119, 49, 96, 7, 7, 21, 112, 70, 3, 118, 81, 119, 1, 16, 119, 68, 0, 86, 115, 118, 0, 4, 7, 1]
     for wm in pixelwm:
         for b in range(0, 7):
             if wm & (1 << b): # bitwise-and
@@ -286,15 +286,16 @@ def write_spriteatlas_jsonarray(filename, filetag, sizex, sizey):
     stroutput = stroutput[:-1]
 
     # meta data
-    stroutput += "\n\t]\n"
+    stroutput += "\n\t],\n"
     stroutput += "\t\"meta\":{\n"
     stroutput += "\t\t\"app\":\"https://github.com/BdR76/GimpSpriteAtlas/\",\n"
     stroutput += "\t\t\"version\":\"GIMP SpriteAtlas plug-in %s\",\n" % ATLAS_PLUGIN_VERSION
+    stroutput += "\t\t\"author\":\"Bas de Reuver\",\n"
     stroutput += ("\t\t\"image\":\"%s.png\",\n" % filetag)
     stroutput += ("\t\t\"size\":{\"w\":%d,\"h\":%d},\n" % (sizex, sizey))
     stroutput += "\t\t\"scale\":1\n"
     stroutput += "\t}\n"
-    stroutput += "]"
+    stroutput += "}"
     
     # export filename
     outputname = '%s.json' % (filename)
@@ -318,15 +319,16 @@ def write_spriteatlas_jsonhash(filename, filetag, img_w, img_h):
     stroutput = stroutput[:-1]
 
     # meta data
-    stroutput += "\n\t}\n"
+    stroutput += "\n\t},\n"
     stroutput += "\t\"meta\":{\n"
     stroutput += "\t\t\"app\":\"https://github.com/BdR76/GimpSpriteAtlas/\",\n"
     stroutput += "\t\t\"version\":\"GIMP SpriteAtlas plug-in %s\",\n" % ATLAS_PLUGIN_VERSION
+    stroutput += "\t\t\"author\":\"Bas de Reuver\",\n"
     stroutput += ("\t\t\"image\":\"%s.png\",\n" % filetag)
     stroutput += ("\t\t\"size\":{\"w\":%d,\"h\":%d},\n" % (img_w, img_h))
     stroutput += "\t\t\"scale\":1\n"
     stroutput += "\t}\n"
-    stroutput += "]"
+    stroutput += "}"
     
     # export filename
     outputname = '%s.json' % (filename)
@@ -339,7 +341,7 @@ def write_spriteatlas_jsonhash(filename, filetag, img_w, img_h):
     
 def write_spriteatlas_css(filename, filetag):
     
-    stroutput = "/* GIMP SpriteAtlas plug-in %s by BdR 2022 */\n" % ATLAS_PLUGIN_VERSION
+    stroutput = "/* GIMP SpriteAtlas plug-in %s by Bas de Reuver 2023 */\n" % ATLAS_PLUGIN_VERSION
 
     # insert all sprite metadata
     for obj in layer_rects:
@@ -362,7 +364,7 @@ def write_spriteatlas_css(filename, filetag):
 def write_spriteatlas_xml(filename, filetag):
     
     stroutput = ('<textureatlas xmlns="http://www.w3.org/1999/xhtml" imagepath="%s.png">\n' % filetag)
-    stroutput += '\t<!-- GIMP SpriteAtlas plug-in %s by BdR 2022 -->\n' % ATLAS_PLUGIN_VERSION
+    stroutput += '\t<!-- GIMP SpriteAtlas plug-in %s by Bas de Reuver 2023 -->\n' % ATLAS_PLUGIN_VERSION
 
     # insert all sprite metadata
     for obj in layer_rects:
