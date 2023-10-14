@@ -6,7 +6,7 @@ sprite textures for use in games and websites.
 
 The plug-in takes several smaller images and compiles them into a single image.
 It uses a packing algorithm to use as little space as possible in the final
-texture. And it exports a JSON, XML or CSS file with the sprite names and
+texture. And it exports a JSON, Atlas, XML or CSS file with the sprite names and
 their coordinates within the compiled texture.
 
 ![GIMP Sprite Atlas plug-in summary](/docs/spriteatlas_summary.png?raw=true "GIMP Sprite Atlas plug-in summary")
@@ -80,6 +80,7 @@ coordinates file.
 
 * JSON TexturePacker-array, compatible with the TexturePacker format
 * JSON TexturePacker hash, compatible with the TexturePacker format
+* libGDX TextureAtlas, .atlas text file
 * CSS sprites, can be used for html and websites
 * XML, plain xml format
 
