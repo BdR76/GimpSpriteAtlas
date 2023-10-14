@@ -1,6 +1,6 @@
 # GIMP plug-in Create SpriteAtlas
 # Take layers as images and compile into spriteatlas
-# including a coordinates file in json/xml/css format
+# including a coordinates file in json/atlas/css/xml format
 # uses rectangle packing algorithm
 #
 # https://github.com/BdR76/GimpSpriteAtlas/
@@ -84,7 +84,7 @@ def prepare_layers_metadata(layers):
     # sort the layer data for packing by height, descending
     layer_rects.sort(reverse=True);
 
-    # aim for a squarish resulting container,
+    # aim for a square-ish resulting container,
     # slightly adjusted for sub-100% space utilization
     startWidth = max(math.ceil(math.sqrt(area / 0.95)), maxWidth)
 
@@ -241,12 +241,21 @@ def render_spriteatlas(layers, filename, filetag):
 
     idx = 0
     for sp in spaces:
+        # adjust space for out-of-bounds of final image size
+        if (sp.x + sp.width > img_w):
+            sp.width -= (sp.x + sp.width - img_w)
+        if (sp.y + sp.height > img_h):
+            sp.height -= (sp.y + sp.height - img_h)
+        # check if watermark fits inside space
         idx += 1
         if (sp.width >= 54 and sp.height >= 8) or (sp.width >= 8 and sp.height >= 54):
             xmark = sp.x
             ymark = sp.y
             horzmark = (sp.width >= 54)
             break
+
+    #pdb.gimp_message_set_handler(ERROR_CONSOLE)
+    #pdb.gimp_message("xmark=%d ymark=%d" % (xmark, ymark))
 
     # add small watermark
     drwLayer = pdb.gimp_image_active_drawable(imgAtlas)
@@ -300,7 +309,7 @@ def write_spriteatlas_jsonarray(filename, filetag, sizex, sizey):
     # export filename
     outputname = '%s.json' % (filename)
 
-    # export coordinates variable to textfile
+    # export coordinate variables to textfile
     outputfile = file(outputname, 'w')
     outputfile.write(stroutput)
     outputfile.close()
@@ -333,7 +342,24 @@ def write_spriteatlas_jsonhash(filename, filetag, img_w, img_h):
     # export filename
     outputname = '%s.json' % (filename)
 
-    # export coordinates variable to textfile
+    # export coordinate variables to textfile
+    outputfile = file(outputname, 'w')
+    outputfile.write(stroutput)
+    outputfile.close()
+    return
+    
+def write_spriteatlas_libgdx(filename, filetag, img_w, img_h):
+
+    stroutput = ("%s.png\nsize: %d,%d\nformat: RGBA8888\nfilter: Linear,Linear\nrepeat: none\n" % (filetag, img_w, img_h))
+
+    # insert all sprite metadata
+    for obj in layer_rects:
+        stroutput +=  ("%s\n  rotate: false\n  xy: %d, %d\n  size: %d, %d\n  orig: %d, %d\n  offset: 0, 0\n  index: -1\n" % (obj.name, obj.pack_x, obj.pack_y, obj.width, obj.height, obj.width, obj.height))
+    
+    # export filename
+    outputname = '%s.atlas' % (filename)
+
+    # export coordinate variables to textfile
     outputfile = file(outputname, 'w')
     outputfile.write(stroutput)
     outputfile.close()
@@ -354,7 +380,7 @@ def write_spriteatlas_css(filename, filetag):
     # export filename
     outputname = '%s.css' % (filename)
 
-    # export coordinates variable to textfile
+    # export coordinate variables to textfile
     outputfile = file(outputname, 'w')
     outputfile.write(stroutput)
     outputfile.close()
@@ -376,7 +402,7 @@ def write_spriteatlas_xml(filename, filetag):
     # export filename
     outputname = '%s.xml' % (filename)
 
-    # export coordinates variable to textfile
+    # export coordinate variables to textfile
     outputfile = file(outputname, 'w')
     outputfile.write(stroutput)
     outputfile.close()
@@ -408,8 +434,10 @@ def create_spriteatlas(image, filetag, foldername, outputtype, padding):
     elif outputtype == 2:
         write_spriteatlas_jsonhash(outputname, filetag, img_w, img_h)
     elif outputtype == 3:
+        write_spriteatlas_libgdx(outputname, filetag, img_w, img_h)
+    elif outputtype == 4:
         write_spriteatlas_css(outputname, filetag)
-    else: # outputtype == 4
+    else: # outputtype == 5
         write_spriteatlas_xml(outputname, filetag)
     
 # Register the plugin with Gimp so it appears in the filters menu
@@ -419,14 +447,14 @@ register(
     "Create a sprite texture image from the layers of the current image.",
     "Bas de Reuver",
     "Bas de Reuver",
-    "2022",
+    "2023",
     "Create SpriteAtlas",
     "*",
     [
         (PF_IMAGE, 'image', 'Input image:', None),
         (PF_STRING, "fileName", "Export file name (without extension):", "sprites"),
         (PF_DIRNAME, "outputFolder", "Export to folder:", "/tmp"),
-        (PF_RADIO, "fileType", "Export file type:", 1, (("JSON-TexturePacker Array", 1), ("JSON-TexturePacker Hash", 2), ("CSS", 3), ("XML", 4))),
+        (PF_RADIO, "fileType", "Export file type:", 1, (("JSON-TexturePacker Array", 1), ("JSON-TexturePacker Hash", 2), ("libGDX TextureAtlas", 3), ("CSS", 4), ("XML", 5))),
         (PF_BOOL, "addPadding", "Pad one pixel between sprites:", TRUE)
     ],
     [],
