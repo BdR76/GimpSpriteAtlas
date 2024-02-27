@@ -409,6 +409,7 @@ def write_spriteatlas_xml(filename, filetag):
     return
     
 def create_spriteatlas(image, filetag, foldername, outputtype, padding):
+    global pixel_space
 
     # create list of all layers
     layers = image.layers
