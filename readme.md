@@ -136,6 +136,7 @@ or [Leshy SpriteSheet Tool](https://www.leshylabs.com/apps/sstool/)
 History
 -------
 26-may-2022 - v0.1 first release  
-14-oct-2023 - v0.2 json bugfix
+14-oct-2023 - v0.2 json bugfix  
+09-mrt-2024 - v0.3 fix pad-pixel option
 
 BdR©2023 Free to use - send questions or comments: Bas de Reuver - bdr1976@gmail.com

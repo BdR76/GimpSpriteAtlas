@@ -12,7 +12,7 @@ import os
 layer_rects = []
 spaces = []
 pixel_space = 1
-ATLAS_PLUGIN_VERSION = "v0.2"
+ATLAS_PLUGIN_VERSION = "v0.3"
 
 # empty space
 class spaceobj(object):
