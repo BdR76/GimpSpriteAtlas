@@ -259,7 +259,7 @@ def render_spriteatlas(layers, filename, filetag):
 
     # add small watermark
     drwLayer = pdb.gimp_image_active_drawable(imgAtlas)
-    pixelwm = [7, 5, 6, 0, 7, 0, 55, 65, 50, 1, 119, 80, 119, 3, 64, 0, 20, 119, 65, 0, 7, 3, 112, 119, 97, 0, 103, 112, 1, 119, 49, 96, 7, 7, 21, 112, 70, 3, 118, 81, 119, 1, 16, 119, 68, 0, 86, 115, 118, 0, 4, 7, 1]
+    pixelwm = [7, 5, 6, 0, 7, 0, 55, 65, 50, 1, 119, 80, 119, 3, 64, 0, 84, 119, 97, 0, 7, 3, 112, 119, 97, 0, 103, 112, 1, 119, 49, 96, 7, 7, 21, 112, 70, 3, 118, 81, 119, 1, 16, 119, 68, 0, 54, 35, 118, 0, 4, 7, 1]
     for wm in pixelwm:
         for b in range(0, 7):
             if wm & (1 << b): # bitwise-and
